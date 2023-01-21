@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/loginReg.css') }}">
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="form-container sign-in-container">
+            <form action="/logAcc" method="post">
+                <h1>SIGN IN</h1>
+                <input type="email" name="email" placeholder="Email">
+                <div class="form-group">
+                    {% with messages = get_flashed_messages(category_filter = ['emailLogin']) %}     
+                        {% if messages %}                            
+                            {% for message in messages %}
+                                <p class="text-danger">{{message}}</p>                   
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <input type="password" name="password" placeholder="Password">
+                <div class="form-group">
+                    {% with messages = get_flashed_messages(category_filter = ['passwordLogin']) %}     
+                        {% if messages %}                            
+                            {% for message in messages %}
+                                <p class="text-danger">{{message}}</p>                   
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <button class="control" type="submit">LOGIN</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start connecting with us</p>
+                    <a class="ghost" href="/register">SIGN UP</a>
+                </div>
+            </div>
+        </div>
+    </div> 
+</body>
+</html>

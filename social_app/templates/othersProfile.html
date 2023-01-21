@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <script src="https://use.fontawesome.com/49b98aaeb5.js"></script>
+    <script src="jquery-3.6.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1 class="ones">Connected</h1>
+        <div class="buttons">
+            <a class="nav-link home" href="/dashboard">Home</a> 
+            <!-- <form class="form" action="/search" method="post">
+                <button>
+                    <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
+                        <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+                <input class="input" placeholder="Search" required type="search" aria-label="Search" name="username">
+                <button class="reset" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </form> -->
+        </div>
+        <a href="/logout" class="styleit"><i class="fa fa-sign-out" aria-hidden="true" style="color: #ffff;"></i></a>  
+
+        <div class="underline"></div>
+    </nav>
+
+    <section>
+        
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="cart">
+                        
+                        <div class="cart-info">
+                            {% if not otherUser.profile_pic %}
+                                <div class="cart-avatar"></div>
+                            {% else %}
+                                <img src="/static/img/{{otherUser.profile_pic}}" alt="avatar"
+                                class="rounded-circle img-fluid mb-3" style="width: 70px; height: 70px;">
+                            {% endif %}
+                            <div class="cart-title mt-3">{{otherUser.username}}</div>
+                            {% if otherUser.about %}
+                                <div class="cart-subtitle mt-3">{{otherUser.about}}</div>
+                            {% else %}
+                                <div class="cart-subtitle mt-3">No about</div>
+                            {% endif %}
+                            <div class="cart-subtitle mt-3">{{connect.number}} connectionss</div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <div class="col-lg-6">
+                    {% if posts %}
+                        {% for post in posts %}
+                            
+                            <div class="card mb-4 ml-5">
+                                <div class="card-body p-3">
+                                    <div class="p-3 bg-light border border-1 singlePost mb-2 ">
+                                        <div class="d-flex">
+                                            <a class="d-flex align-items-center noStyle" href="/profile/{{post.creator_id}}">
+                                                <div class="cart-avatar-post"></div>
+                                                {% if not post.profile_pic %}
+                                                    <div class="cart-avatar" style="width: 30px; height: 30px;"></div>
+                                                {% else %}
+                                                    <img src="/static/img/{{otherUser.profile_pic}}" alt="avatar"
+                                                    class="rounded-circle img-fluid mb-3" style="width: 30px; height: 30px;">
+                                                {% endif %}
+                                                <p class="mx-3 noStyle"><strong>{{otherUser.username}}</strong></p>
+                                            </a>
+                                        </div>
+                                        <div class="d-flex flex-column ">
+                                            <img src="/static/img/{{post.media}}" alt="avatar" class=" img-fluid" style="width: 100%;">
+                                            <div class="d-flex ">
+                                                {% if post.id not in likes %}
+                                                    <a class="ml-3" style=" margin-top: 10px;"  href="/likePost/{{post.id}}"><img style="height: 23px; width: 23px;" src="{{ url_for('static', filename='img/like.png') }}" alt="addLike"></a>
+                                                {% endif %}
+                                                {% if post.id in likes %}
+                                                    <a class="ml-3"  style=" margin-top: 10px;" href="/unlikePost/{{post.id}}"><img style="height: 23px; width: 23px;" src="{{ url_for('static', filename='img/unlike.png') }}" alt="removeLike"></a>
+                                                {% endif %}
+                                                <button style="border: none; background: none; margin-right: 10px; margin-left: 10px; margin-top: 9px;" class="ml-3"><img style="height: 20px; width: 20px;" src="{{ url_for('static', filename='img/chat.png') }}" alt="comment"></button>
+                                                <img style="height: 20px; width: 20px;  margin-top: 12px;" src="{{ url_for('static', filename='img/send.png') }}" alt="removeLike">
+                                            </div>
+                                            {% if post.likesNr == 0 %}
+                                                <p></p>
+                                            {% endif %}
+                                            {% if post.likesNr == 1 %}
+                                                <p>{{post.likesNr}} like</p>
+                                            {% endif %}
+                                            {% if post.likesNr > 1 %}
+                                                <p>{{post.likesNr}} likes</p>
+                                            {% endif %}
+                                            <p> <strong>{{otherUser.username}}</strong> <small>{{post.caption}}</small> </p>
+                                            {% if post.comments %}
+                                                <a href="#{{post.id}}" data-toggle="collapse">View all comments</a>
+                                                <div id="{{post.id}}" class="collapse">
+                                                    {% for comment in post.comments %}
+                                                        <p> <strong>{{comment.username}}</strong> : {{comment.content}}</p>
+                                                        {% if comment.commenter == loggedUser.id %}
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btnDropdown-two dropdown-toggle" type="button" data-toggle="dropdown"></button>
+                                                                <ul class="dropdown-menu two">
+                                                                    <li>
+                                                                        <a href="/delete-comment/{{comment.id}}" class="dropdown-item1">Delete</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <p class="colorThisone">Add the first comment</p>
+                                            {% endif %}
+                                            <form class="form w-100" action="/createComment/{{post.id}}" method="post">
+                                                <input class="input" placeholder="Leave a comment as {{loggedUser.username}}" required name="content" type="text">
+                                                <button type="submit" value="post">
+                                                    Post
+                                                </button>
+                                                
+                                            </form>
+
+                                            <p class="mt-3"><small>Posted on: {{post.created_at.strftime('%d-%m-%Y')}}</small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        
+                        {% endfor %}
+                            
+                            
+                    {% else %}
+                            <h2 class="text-center">{{otherUser.username}} hasn't posted yet!</h2>
+                    {% endif %}
+                    
+                    
+                </div>
+                
+                <div class="col-lg-4">
+                    
+                    <div class="card mb-4 decori">
+                        <ul class="style overflow-auto">
+                            
+                            {% if friends %}
+                                <h5 class="text-center text">{{otherUser.username}} connections</h5>
+                                {% for user in friends %}
+                                    <li class="m-3">
+                                        {% if user.user == loggedUser.id %}
+                                            <a class="d-flex align-items-center noStyle" href="/profile/{{loggedUser.id}}">
+                                                <div class="d-flex align-items-center ">
+                                                    {% if user.profile_pic %}
+                                                        <img src="/static/img/{{user.profile_pic}}" alt="avatar" class="rounded-circle img-fluid mr-5" style="width: 40px; height: 40px;">
+                                                    {% else %}
+                                                        <div class="cart-avatar" style="width: 40px; height: 40px;"></div>
+                                                    {% endif %}
+                                                    <p class="mx-3 my-3 text-dark"> <strong>{{user.username}}</strong></p>
+                                                </div>
+                                            </a>
+                                        {% else %}
+                                            <a class="d-flex align-items-center noStyle" href="/profileUser/{{user.user}}">
+                                                <div class="d-flex align-items-center ">
+                                                    {% if user.profile_pic %}
+                                                        <img src="/static/img/{{user.profile_pic}}" alt="avatar" class="rounded-circle img-fluid mr-5" style="width: 40px; height: 40px;">
+                                                    {% else %}
+                                                        <div class="cart-avatar" style="width: 40px; height: 40px;"></div>
+                                                    {% endif %}
+                                                    <p class="mx-3 my-3 text-dark"> <strong>{{user.username}}</strong></p>
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <h2 class="text-center text">You have no connections, go add some!</h2>
+                            {% endif %}
+                            
+                        </ul> 
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <p class="card-title text-muted">{{loggedUser.username}}, make connections that matter most </p>
+                            <div class="d-flex justify-content-around w-70">
+                                
+                                <img src="{{ url_for('static', filename='img/itunes.png') }}" alt="avatar"
+                                        class="img-fluid" style="width: auto; height: 60px;">
+                            </div>
+                            <p class="text-muted">See who's viewed your profile in the last 90 days</p>
+                            <button type="button" class="rounded-pill position-relative centerThis btn-outline-primary">Try for free</button>
+                        </div>
+                            
+                    </div>
+                    <footer>
+                        <div>
+                            <div >
+                                <div>
+                                    <div class="text-center">
+                                        <a class="decor" href="/dashboard">About</a>
+                                        <a class="decor" href="/dashboard">Accesibility</a>
+                                        <a class="decor" href="/dashboard">Help Center</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="decor" href="/dashboard">Privacy Terms</a>
+                                        <a class="decor" href="/dashboard">Add Choices</a>
+                                        <a class="decor" href="/dashboard">Adverstising</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="decor" href="/dashboard">Business Center</a>
+                                        <a class="decor" href="/dashboard">Help</a>
+                                    </div>
+                                    <p class="text-muted text-center">Connected Corporation © 2023</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+                
+            </div>    
+
+
+
+</body>
+</html>
